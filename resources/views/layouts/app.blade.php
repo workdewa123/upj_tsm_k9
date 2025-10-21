@@ -24,28 +24,31 @@
 <!-- ========================================================================= -->
 <!-- NAVBAR ADMIN KEKINIAN (FIXED TOP) -->
 <!-- ========================================================================= -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm fixed-top">
+<nav class="navbar navbar-expand-lg navbar-danger bg-danger shadow-sm fixed-top">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="{{ route('admin.dashboard') }}">
-            <i class="fas fa-tools me-2"></i> Admin Panel
+        <a class="navbar-brand fw-bold text-white" href="{{ route('admin.dashboard') }}">
+            <i class="fas fa-tools me-2 text-white"></i> Admin Panel
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            
+        </div>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{ route('admin.dashboard') }}"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a>
+                    <a class="nav-link active text-white" aria-current="page" href="{{ route('admin.dashboard') }}"><i class="fas fa-tachometer-alt me-1 text-white"></i> Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('booking.index') }}"><i class="fas fa-book me-1"></i> Semua Booking</a>
+                    <a class="nav-link text-white" href="{{ route('booking.index') }}"><i class="fas fa-book me-1 text-white"></i> Semua Booking</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('customers.index') }}"><i class="fas fa-users me-1"></i> Customer</a>
+                    <a class="nav-link text-white" href="{{ route('customers.index') }}"><i class="fas fa-users me-1 text-white"></i> Customer</a>
                 </li>
                 <!-- Tautan ke Halaman Advisor -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('advisor.create') }}"><i class="fas fa-user-tie me-1"></i> Advisor</a>
+                    <a class="nav-link text-white" href="{{ route('advisor.create') }}"><i class="fas fa-user-tie me-1 text-white"></i> Advisor</a>
                 </li>
             </ul>
 

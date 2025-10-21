@@ -5,6 +5,9 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ServiceAdvisorController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', function () {
+    return view('landing');
+})->name('landing');
 
 // --- Rute Otentikasi & Registrasi (Akses Publik) ---
 Route::get('/login', [AuthController::class, 'login'])->name('login');

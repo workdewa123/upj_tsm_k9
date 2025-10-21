@@ -2,110 +2,97 @@
 
 @section('content')
 
-<!-- Memberi ruang di bawah fixed-top navbar -->
-<div class="mt-5 pt-3">
-
-    <!-- Bungkus konten dengan container untuk membatasi lebar dan menambahkan padding vertikal -->
+<div class="pt-3">
     <div class="container py-4">
 
-        <h1 class="mb-4 text-primary fw-bold border-bottom pb-2">Dashboard Administratif</h1>
+        <h1 class="mb-4 fw-bold border-bottom pb-2" style="color: #343a40af;">
+            <i class="fas fa-tachometer-alt text-danger me-2"></i>Dashboard Administratif
+        </h1>
 
-        <!-- Bagian Statistik Ringkas (Card Modern) -->
         <div class="row mb-5 g-4">
 
-            <!-- Card: Total Booking Hari Ini -->
             <div class="col-md-4">
-                <div class="card shadow-lg border-0 rounded-4 overflow-hidden h-100 bg-success text-white">
+                <div class="card shadow-lg border-0 text-white bg-danger">
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div>
                             <h5 class="card-title text-uppercase small opacity-75">Total Booking Hari Ini</h5>
-                            <h1 class="card-text fw-bolder">{{ $totalBookingsToday ?? 0 }}</h1>
+                            <p class="card-text fw-bolder display-4">{{ $totalBookingsToday ?? 0 }}</p>
                         </div>
-                        <i class="fas fa-calendar-check fa-3x opacity-50"></i> <!-- Ikon untuk booking -->
+                        <i class="fas fa-calendar-check fa-3x opacity-50"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- Card: Booking Menunggu (Pending) -->
             <div class="col-md-4">
-                <div class="card shadow-lg border-0 rounded-4 overflow-hidden h-100 bg-warning text-dark">
-                    <div class="card-body d-flex justify-content-between align-items-center">
+                <div class="card shadow-lg border-0 text-white bg-secondary">
+                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div>
-                            <h5 class="card-title text-uppercase small opacity-75">Booking Menunggu (Pending)</h5>
-                            <h1 class="card-text fw-bolder">{{ $pendingBookings ?? 0 }}</h1>
+                            <h5 class="card-title text-uppercase small opacity-75">Booking Menunggu</h5>
+                            <p class="card-text fw-bolder display-4">{{ $pendingBookings ?? 0 }}</p>
                         </div>
-                        <i class="fas fa-hourglass-half fa-3x opacity-50"></i> <!-- Ikon untuk pending -->
+                        <i class="fas fa-hourglass-half fa-3x opacity-50"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- Card: Customer Terdaftar -->
             <div class="col-md-4">
-                <div class="card shadow-lg border-0 rounded-4 overflow-hidden h-100 bg-info text-white">
+                <div class="card shadow-lg border-0 text-white bg-danger">
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div>
                             <h5 class="card-title text-uppercase small opacity-75">Customer Terdaftar</h5>
-                            <h1 class="card-text fw-bolder">{{ $registeredCustomers ?? 0 }}</h1>
+                            <p class="card-text fw-bolder display-4">{{ $registeredCustomers ?? 0 }}</p>
                         </div>
-                        <i class="fas fa-users fa-3x opacity-50"></i> <!-- Ikon untuk user -->
+                        <i class="fas fa-users fa-3x opacity-50"></i>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Bagian Antrian Booking Hari Ini -->
         <div class="card shadow-lg border-0 rounded-4">
-            <div class="card-header bg-primary text-white fw-bold py-3 d-flex justify-content-between align-items-center">
-                Antrian Booking Hari Ini
-                <a href="{{ route('booking.index') }}" class="btn btn-sm btn-light text-primary fw-bold">Lihat Semua Antrian <i class="fas fa-arrow-circle-right"></i></a>
+            <div class="card-header bg-secondary text-white fw-bold py-3 d-flex justify-content-between align-items-center">
+                <span><i class="fas fa-stream me-2"></i>Antrian Booking Hari Ini</span>
+                <a href="{{ route('booking.index') }}" class="btn btn-sm btn-light text-dark fw-bold">
+                    Lihat Semua <i class="fas fa-arrow-circle-right"></i>
+                </a>
             </div>
             <div class="card-body p-0">
-
                 @if ($queueBookings->isEmpty())
-                    <div class="alert alert-light text-center m-0 py-4" role="alert">
-                        <i class="fas fa-check-circle fa-2x mb-2 text-success"></i>
-                        <p class="mb-0 text-muted">Hore! Tidak ada antrian booking aktif hari ini.</p>
+                    <div class="text-center p-5">
+                        <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
+                        <h4 class="text-muted">Tidak Ada Antrian</h4>
+                        <p class="text-muted">Semua pekerjaan hari ini sudah selesai. Kerja bagus!</p>
                     </div>
                 @else
-                    <ul class="list-group list-group-flush">
+                    <div class="list-group list-group-flush">
                         @foreach ($queueBookings as $booking)
-                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
-
-                                <!-- Antrian & Nama Customer -->
-                                <div class="d-flex align-items-center flex-grow-1">
-                                    <span class="badge bg-secondary rounded-pill me-3 fs-5 p-2 px-3 fw-bold">#{{ $booking->queue_number }}</span>
+                            <a href="{{ route('booking.show', $booking->id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3">
+                                <div class="d-flex align-items-center">
+                                    <span class="badge bg-danger rounded-pill me-3 fs-5 p-2 px-3 fw-bold">#{{ $booking->queue_number }}</span>
                                     <div>
                                         <h6 class="mb-0 fw-bold text-dark">{{ $booking->customer_name }}</h6>
                                         <small class="text-muted">
-                                            <i class="fas fa-motorcycle me-1"></i> {{ $booking->license_plate }} | <i class="fas fa-wrench me-1"></i> {{ $booking->service->name ?? 'Layanan Tidak Dikenal' }}
+                                            {{ $booking->service->name ?? 'Layanan Tidak Dikenal' }}
                                         </small>
                                     </div>
                                 </div>
-
-                                <!-- Status & Aksi -->
-                                <div class="text-end d-flex flex-column align-items-end">
-                                    <!-- Status Label -->
+                                <div>
                                     @php
                                         $statusClass = [
-                                            'pending' => 'badge-soft-warning text-warning border border-warning',
-                                            'approved' => 'badge-soft-info text-info border border-info',
-                                            'on_progress' => 'badge-soft-primary text-primary border border-primary',
-                                            'done' => 'badge-soft-success text-success border border-success',
-                                            'cancelled' => 'badge-soft-danger text-danger border border-danger',
-                                        ][strtolower($booking->status)] ?? 'badge-soft-secondary text-secondary border border-secondary';
+                                            'pending'     => 'bg-warning text-dark',
+                                            'approved'    => 'bg-info text-dark',
+                                            'on_progress' => 'bg-primary',
+                                            'done'        => 'bg-success',
+                                            'cancelled'   => 'bg-danger',
+                                        ][strtolower($booking->status)] ?? 'bg-secondary';
                                     @endphp
-                                    <span class="badge {{ $statusClass }} text-uppercase mb-2 py-2 px-3 fw-bold">{{ $booking->status }}</span>
-
-                                    <!-- Link ke Detail -->
-                                    <a href="{{ route('booking.show', $booking->id) }}" class="btn btn-sm btn-outline-primary fw-bold">Lihat Detail <i class="fas fa-chevron-right ms-1"></i></a>
+                                    <span class="badge rounded-pill {{ $statusClass }}">{{ str_replace('_', ' ', ucfirst($booking->status)) }}</span>
                                 </div>
-                            </li>
+                            </a>
                         @endforeach
-                    </ul>
+                    </div>
                 @endif
             </div>
         </div>
     </div>
 </div>
-
 @endsection
