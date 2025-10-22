@@ -33,6 +33,19 @@
         </a>
     </div>
 
+    {{-- FORM PENCARIAN --}}
+    {{-- <div class="mb-3">
+        <form action="{{ route('booking.index') }}" method="GET" class="d-flex">
+            <input type="text" name="search_plate" class="form-control me-2" placeholder="Cari berdasarkan Plat Nomor..." value="{{ request('search_plate') }}">
+            <button type="submit" class="btn btn-danger"><i class="fas fa-search"></i> Cari</button>
+            {{-- Tombol Reset (opsional) --}}
+            {{-- @if(request('search_plate'))
+                <a href="{{ route('booking.index') }}" class="btn btn-outline-secondary ms-2">Reset</a>
+            @endif
+        </form>
+    </div>
+    {{-- Akhir Form Pencarian --}}
+
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
