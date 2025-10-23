@@ -247,6 +247,34 @@ class BookingController extends Controller
 
         return view('customers.bookings', compact('bookings', 'customerName'));
     }
+
+    public function customerDashboard()
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        // --- Ambil Data Riwayat Booking Milik Customer ---
+        $bookings = $user->bookings() // Ambil hanya booking milik user yang login
+                         ->with('service') // Eager load relasi service
+                         ->latest('booking_date') // Urutkan berdasarkan tanggal terbaru
+                         ->paginate(5); // Batasi 5 per halaman
+
+        // --- Ambil Data untuk Form Create Booking ---
+        // (Sama seperti logic di method create())
+        $todayActive = Booking::whereDate('booking_date', date('Y-m-d'))
+                               ->whereIn('status', ['pending', 'approved', 'on_progress'])
+                               ->count();
+        $services = Service::all();
+
+        // --- Tampilkan View ---
+        // Buat view baru di resources/views/customer/dashboard.blade.php
+        return view('customers.dashboard', compact(
+            'user',
+            'bookings',
+            'todayActive',
+            'services'
+        ));
+    }
     public function boot()
     {
         Paginator::useBootstrapFive();

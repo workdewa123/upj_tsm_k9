@@ -45,7 +45,7 @@ class AuthController extends Controller
             }
 
             // Default redirect untuk customer
-            return redirect()->intended(route('booking.create'))->with('success', 'Login berhasil!');
+            return redirect()->intended(route('customers.dashboard'))->with('success', 'Login berhasil!');
         }
 
         // 3. Otentikasi Gagal

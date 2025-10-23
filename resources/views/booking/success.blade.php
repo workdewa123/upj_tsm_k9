@@ -53,6 +53,7 @@
                     {{-- Tombol Aksi --}}
                     <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
                         {{-- <a href="{{ route('booking.queue') }}" class="btn btn-outline-danger">Lihat Daftar Antrian</a> --}}
+                        <a href="{{ route('booking.queue') }}" class="btn btn-primary">Lihat Daftar Antrian</a>
                         <a href="{{ route('admin.dashboard') }}" class="btn btn-danger">Kembali ke Dashboard</a>
                         {{-- Mengarahkan ke dashboard customer --}}
                     </div>

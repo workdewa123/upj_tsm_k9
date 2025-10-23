@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ServiceAdvisorController;
+use App\Models\Booking;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -54,10 +55,17 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{id}', [BookingController::class, 'show'])->name('show');
         Route::post('/{id}/update-status', [BookingController::class, 'updateStatus'])->name('updateStatus');
         Route::get('/{id}/history', [BookingController::class, 'historyDetail'])->name('history.detail');
+        // --- TAMBAHKAN ROUTE INI ---
+        Route::get('/dashboard', [App\Http\Controllers\BookingController::class, 'customerDashboard'])->name('customers.dashboard');
+        // ---------------------------
+
+        // --- Rute DASHBOARD ADMIN BARU ---
+        Route::get('/admin/dashboard', [BookingController::class, 'adminDashboard'])->name('admin.dashboard');
     });
 
     // Rute Customers (Dikelompokkan)
     Route::prefix('customers')->name('customers.')->group(function () {
+        Route::get('/dashboard', [BookingController::class, 'customerDashboard'])->name('dashboard');
         Route::get('/', [BookingController::class, 'customers'])->name('index');
         Route::get('/{whatsapp}/bookings', [BookingController::class, 'customerBookings'])->name('bookings');
     });
