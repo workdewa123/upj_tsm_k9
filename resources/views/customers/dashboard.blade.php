@@ -5,7 +5,7 @@
 @section('content')
 <div class="container py-5">
     <h1 class="mb-4 fw-bold border-bottom pb-2">
-        <i class="fas fa-user-circle me-2"></i>Selamat Datang, {{ $user->name }}!
+        <i class="fas fa-user-circle me-2"></i>Hallo Selamat Datang, {{ $user->name }}!
     </h1>
 
     <div class="row g-4">
