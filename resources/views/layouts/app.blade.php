@@ -238,7 +238,7 @@
              <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm fixed-top">
                 {{-- ... (Navbar customer tetap sama) ... --}}
                 <div class="container">
-                    <a class="navbar-brand" href="{{ route('customer.dashboard') }}">
+                    <a class="navbar-brand" href="{{ route('customers.dashboard') }}">
                         <i class="fas fa-motorcycle me-2"></i> Bengkel Servis
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#customerNavbarNav" aria-controls="customerNavbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -247,7 +247,7 @@
                     <div class="collapse navbar-collapse" id="customerNavbarNav">
                         <ul class="navbar-nav ms-auto">
                             <li class="nav-item">
-                                <a class="nav-link {{ Route::is('customer.dashboard') ? 'active fw-bold' : '' }}" href="{{ route('customer.dashboard') }}">
+                                <a class="nav-link {{ Route::is('customers.dashboard') ? 'active fw-bold' : '' }}" href="{{ route('customers.dashboard') }}">
                                     <i class="fas fa-tachometer-alt me-1"></i> Dashboard
                                 </a>
                             </li>
