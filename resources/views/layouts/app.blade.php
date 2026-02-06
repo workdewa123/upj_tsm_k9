@@ -5,306 +5,302 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Booking Service TSM')</title>
 
+    {{-- Google Fonts: Poppins (Lebih tebal dan jelas untuk UI) --}}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     {{-- Bootstrap CSS --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     {{-- Font Awesome --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLMDJzLlQ36k2UaYJtU378F7xXvP+sN4fFw/U6/A2uB4aU+M+F1U+A9P7y+W+W+Z+Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 
     <style>
+        :root {
+            --header-height: 70px;
+            --sidebar-width: 80px; /* Sidebar Ikon Ramping */
+            --primary-color: #dc3545; /* Merah Bootstrap */
+            --bg-light: #f4f6f9;
+        }
+
         body {
-            background-color: #f8f9fa; /* Latar belakang area konten */
-            padding-top: 56px; /* Tinggi navbar fixed-top */
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            overflow-x: hidden; /* Mencegah scroll horizontal */
         }
 
-        /* Navbar Atas */
-        .navbar {
-            z-index: 1030; /* Pastikan di atas elemen lain */
-        }
-
-        /* Sidebar Styling (Icon-Only, tidak lagi fixed di kiri) */
-        .sidebar {
-            width: 4.5rem; /* Lebar tetap */
-            background-color: #f8f9fa; /* bg-body-tertiary */
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Optional: shadow */
-            height: calc(100vh - 56px); /* Tinggi sisa viewport */
-            /* Dihapus: position: fixed, top, left, bottom, z-index, transisi */
-             display: flex; /* Aktifkan flexbox */
-             flex-direction: column; /* Susun vertikal */
-             flex-shrink: 0; /* Jangan menyusut */
-             overflow-y: auto; /* Scroll jika perlu (untuk profile) */
-        }
-
-        /* Konten Utama */
-        .main-content {
-             flex-grow: 1; /* Ambil sisa ruang horizontal */
-             overflow-y: auto; /* Konten bisa di-scroll */
-             height: calc(100vh - 56px); /* Tinggi sisa viewport */
-             padding: 1.5rem; /* Padding area konten */
-        }
-
-        /* Wrapper untuk menempatkan sidebar dan konten utama berdampingan */
-        .admin-layout-wrapper {
+        /* --- 1. NAVBAR (Header) --- */
+        .admin-header {
+            height: var(--header-height);
+            background-color: #ffffff;
+            border-bottom: 1px solid #dee2e6;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1030;
             display: flex;
-            height: calc(100vh - 56px); /* Mengisi sisa tinggi setelah navbar */
+            align-items: center;
+            padding: 0 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
 
-        /* Sidebar Nav Link Styling */
-        .sidebar .nav-link {
-            padding: .75rem 1rem;
-            color: #dc3545; /* Ikon warna merah */
-            text-align: center;
+        .brand-logo {
             font-size: 1.25rem;
-            border-left: 3px solid transparent;
+            font-weight: 700;
+            color: #212529;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            /* Pastikan logo tidak bergeser */
+            min-width: 200px; 
         }
 
-        .sidebar .nav-link:hover {
-            background-color: #e9ecef;
-            color: #ae212f; /* Merah gelap hover */
+        /* --- 2. SIDEBAR (Kiri Bawah Navbar) --- */
+        .admin-sidebar {
+            position: fixed;
+            top: var(--header-height); /* Tepat di bawah navbar */
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
+            background-color: #212529; /* Gelap Solid agar jelas */
+            z-index: 1020;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 1rem;
+            transition: transform 0.3s ease;
         }
 
-        .sidebar .nav-link.active {
-            background-color: #dc3545; /* Background merah aktif */
-            color: #fff; /* Ikon putih aktif */
-            border-left-color: #ae212f; /* Border kiri */
+        /* Item Sidebar */
+        .sidebar-link {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #adb5bd; /* Abu-abu terang */
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: all 0.2s;
         }
 
-        /* Profile Dropdown di Bawah Sidebar */
-        .sidebar .profile-dropdown {
-             margin-top: auto; /* Dorong ke bawah */
-             border-top: 1px solid #dee2e6;
-        }
-        .sidebar .dropdown-toggle::after { display: none; }
-        .sidebar .profile-image { width: 32px; height: 32px; }
-        .sidebar .profile-dropdown .dropdown-menu {
-             /* Pastikan dropdown muncul di tempat yang benar */
-            position: absolute !important;
-            inset: auto 0px 0px auto !important;
-            transform: translate3d(calc(4.5rem + 5px), -45px, 0px) !important;
+        .sidebar-link:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: #ffffff;
         }
 
-        /* Style untuk toggler icon navbar */
-        .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        /* Aktif State (Merah) */
+        .sidebar-link.active {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            box-shadow: 0 4px 6px rgba(220, 53, 69, 0.3);
         }
-        .navbar-toggler { border: none; padding: 0.25rem 0.5rem; }
-        .navbar-toggler:focus { box-shadow: none; }
 
-        /* Responsive: Sidebar disembunyikan di mobile, konten full width */
-        @media (max-width: 767.98px) {
-            .sidebar {
-                position: fixed; /* Kembali fixed agar bisa di-toggle */
-                transform: translateX(-100%); /* Sembunyikan */
-                z-index: 1040; /* Di atas overlay */
-                 height: 100vh; /* Tinggi penuh saat mobile */
-                 padding-top: 56px; /* Ruang untuk navbar */
-                 transition: transform 0.3s ease-in-out;
+        /* --- 3. KONTEN UTAMA (Kanan Bawah Navbar) --- */
+        .admin-main {
+            margin-top: var(--header-height);
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            min-height: calc(100vh - var(--header-height));
+            transition: margin-left 0.3s ease;
+        }
+
+        /* --- 4. DROPDOWN PROFILE --- */
+        .profile-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            border: 1px solid #dee2e6;
+            background: white;
+            color: #212529;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .profile-btn:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* --- RESPONSIVE MOBILE --- */
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%); /* Sembunyikan sidebar */
             }
-             .sidebar.show {
-                transform: translateX(0); /* Tampilkan */
+            .admin-sidebar.show {
+                transform: translateX(0); /* Tampilkan jika ditoggle */
             }
-            .admin-layout-wrapper {
-                 display: block; /* Hapus flex */
-                 height: auto;
+            .admin-main {
+                margin-left: 0; /* Konten full width */
+                padding: 1rem;
             }
-            .main-content {
-                height: auto; /* Tinggi otomatis */
-                 width: 100%; /* Lebar penuh */
+            /* Tombol Toggle Sidebar (Hanya muncul di mobile) */
+            .sidebar-toggler {
+                display: block !important;
             }
-             .navbar {
-                 width: 100%; /* Navbar full width di mobile */
-             }
         }
-
     </style>
 </head>
 <body>
 
     @auth
         @if(Auth::user()->role === 'admin')
-            {{-- ================= NAVBAR ATAS (ADMIN) ================= --}}
-            <nav class="navbar navbar-expand-md navbar-dark bg-danger shadow-sm fixed-top">
-                <div class="container-fluid">
-                    {{-- Tombol Toggler untuk Sidebar di Mobile --}}
-                    {{-- data-bs-target diubah ke #sidebarMenu --}}
-                     <button class="navbar-toggler d-md-none me-2" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
+            
+            {{-- ================= HEADER / NAVBAR (Putih Bersih) ================= --}}
+            <header class="admin-header justify-content-between">
+                <div class="d-flex align-items-center">
+                    {{-- Tombol Menu (Mobile Only) --}}
+                    <button class="btn btn-link text-dark p-0 me-3 d-none sidebar-toggler" onclick="toggleSidebar()">
+                        <i class="fas fa-bars fa-lg"></i>
                     </button>
-
-                    {{-- Brand/Logo --}}
-                    <a class="navbar-brand fw-bold ms-md-3" href="{{ route('admin.dashboard') }}"> {{-- <i class="fas fa-tools fs-4 text-center d-block text-white"></i> --}}<i class="fas fa-tools me-2 text-white"></i>
-                       Admin Panel
+                    
+                    {{-- LOGO JELAS & BESAR --}}
+                    <a href="{{ route('admin.dashboard') }}" class="brand-logo">
+                        <i class="fas fa-tools text-danger me-2 fs-4"></i>
+                        <span>ADMIN<span class="text-danger">PANEL</span></span>
                     </a>
+                </div>
 
-                    {{-- Spacer --}}
-                    <div class="d-flex flex-grow-1"></div>
-
-                    {{-- Navigasi Kanan (HANYA Logout di layar besar) --}}
-                    <ul class="navbar-nav flex-row align-items-center d-none d-md-flex">
-                         {{-- Profile sekarang ada di sidebar --}}
-                         <li class="nav-item me-3">
-                              <span class="nav-link text-white"><i class="fas fa-user-circle fa-lg"></i> <span class="ms-1">{{ Auth::user()->name }}</span></span>
-                         </li>
-                         {{-- Tombol Logout --}}
-                         <li class="nav-item">
-                            <form id="logout-form-admin-nav" action="{{ route('logout') }}" method="POST" class="d-inline">
+                {{-- Bagian Kanan Header --}}
+                <div class="dropdown">
+                    <a href="#" class="profile-btn dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-circle fs-5 text-secondary"></i>
+                        <span>{{ Auth::user()->name }}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+                        @if(Route::has('profile'))
+                        <li><a class="dropdown-item py-2" href="{{ route('profile') }}"><i class="fas fa-user me-2 text-muted"></i> Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        @endif
+                        <li>
+                            <form action="{{ route('logout') }}" method="POST">
                                 @csrf
-                                <button type="submit" class="btn btn-outline-light btn-sm d-flex align-items-center">
-                                    <i class="fas fa-sign-out-alt me-1"></i>
-                                    <span>Keluar</span>
+                                <button type="submit" class="dropdown-item py-2 text-danger fw-bold">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Keluar
                                 </button>
                             </form>
                         </li>
                     </ul>
                 </div>
-            </nav>
+            </header>
 
-             {{-- Wrapper untuk Layout Admin (Sidebar + Konten) --}}
-             <div class="admin-layout-wrapper">
-
-                {{-- ================= SIDEBAR (ADMIN - ICON ONLY) ================= --}}
-                {{-- Dikeluarkan dari navbar, ID ditambahkan, collapse ditambahkan --}}
-                <div class="d-flex flex-column flex-shrink-0 sidebar collapse d-md-flex" id="sidebarMenu">
-                    {{-- Navigasi Utama --}}
-                    <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
-                        <li class="nav-item">
-                            <a href="{{ route('admin.dashboard') }}" class="nav-link {{ Route::is('admin.dashboard') ? 'active' : '' }} py-3 border-bottom rounded-0"
-                               title="Dashboard" data-bs-toggle="tooltip" data-bs-placement="right">
-                                <i class="fas fa-fw fa-home"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('booking.index') }}" class="nav-link {{ Route::is('booking.index') || Route::is('booking.show') ? 'active' : '' }} py-3 border-bottom rounded-0"
-                               title="Semua Booking" data-bs-toggle="tooltip" data-bs-placement="right">
-                                 <i class="fas fa-fw fa-book-open"></i>
-                            </a>
-                        </li>
-                        @if(Route::has('booking.queue'))
-                        <li>
-                            <a href="{{ route('booking.queue') }}" class="nav-link {{ Route::is('booking.queue') ? 'active' : '' }} py-3 border-bottom rounded-0"
-                               title="Antrian Hari Ini" data-bs-toggle="tooltip" data-bs-placement="right">
-                                 <i class="fas fa-fw fa-clipboard-list"></i>
-                            </a>
-                        </li>
-                        @endif
-                        <li>
-                            <a href="{{ route('customers.index') }}" class="nav-link {{ Route::is('customers.index') || Route::is('customers.bookings') ? 'active' : '' }} py-3 border-bottom rounded-0"
-                               title="Customer" data-bs-toggle="tooltip" data-bs-placement="right">
-                                <i class="fas fa-fw fa-users"></i>
-                            </a>
-                        </li>
-                         @if(Route::has('advisor.create'))
-                        <li>
-                            <a href="{{ route('advisor.create') }}" class="nav-link {{ Route::is('advisor.create') ? 'active' : '' }} py-3 border-bottom rounded-0"
-                               title="Advisor Form" data-bs-toggle="tooltip" data-bs-placement="right">
-                                 <i class="fas fa-fw fa-user-tie"></i>
-                            </a>
-                        </li>
-                         @endif
-                    </ul>
-
-                    {{-- Profile Dropdown di bawah --}}
-                    <div class="dropdown border-top profile-dropdown">
-                        <a href="#" class="d-flex align-items-center justify-content-center p-3 link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                             <i class="fas fa-user-circle fs-4 text-secondary"></i>
-                        </a>
-                        <ul class="dropdown-menu text-small shadow">
-                            @if(Route::has('profile'))
-                                <li><a class="dropdown-item" href="{{ route('profile') }}">Profile</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                            @endif
-                            <li>
-                                 <form id="logout-form-sidebar" action="{{ route('logout') }}" method="POST" style="display: none;"> @csrf </form>
-                                 <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-sidebar').submit();">
-                                    Sign out
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                {{-- AKHIR SIDEBAR ICON ONLY --}}
-
-                {{-- ================= KONTEN UTAMA (Admin) ================= --}}
-                <div class="main-content">
-                    <main> {{-- Hapus class container/container-fluid dari sini --}}
-                         @yield('content')
-                    </main>
-                </div>
-
-            </div> {{-- Akhir admin-layout-wrapper --}}
-
-
-        @elseif(Auth::user()->role === 'customer')
-            {{-- ================= NAVBAR ATAS (CUSTOMER - Layout normal) ================= --}}
-             <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm fixed-top">
-                {{-- ... (Navbar customer tetap sama) ... --}}
-                <div class="container">
-                    <a class="navbar-brand" href="{{ route('customers.dashboard') }}">
-                        <i class="fas fa-motorcycle me-2"></i> Bengkel Servis
+            {{-- ================= SIDEBAR (Gelap & Ramping) ================= --}}
+            <aside class="admin-sidebar" id="adminSidebar">
+                
+                {{-- Menu Navigasi --}}
+                <div class="d-flex flex-column gap-2 w-100 align-items-center">
+                    
+                    {{-- Dashboard --}}
+                    <a href="{{ route('admin.dashboard') }}" 
+                       class="sidebar-link {{ Route::is('admin.dashboard') ? 'active' : '' }}" 
+                       data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard">
+                        <i class="fas fa-th-large"></i>
                     </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#customerNavbarNav" aria-controls="customerNavbarNav" aria-expanded="false" aria-label="Toggle navigation">
+
+                    {{-- Semua Booking --}}
+                    <a href="{{ route('booking.index') }}" 
+                       class="sidebar-link {{ Route::is('booking.index') || Route::is('booking.show') ? 'active' : '' }}" 
+                       data-bs-toggle="tooltip" data-bs-placement="right" title="Semua Booking">
+                        <i class="fas fa-book-open"></i>
+                    </a>
+
+                    {{-- Antrian (Jika ada) --}}
+                    @if(Route::has('booking.queue'))
+                    <a href="{{ route('booking.queue') }}" 
+                       class="sidebar-link {{ Route::is('booking.queue') ? 'active' : '' }}" 
+                       data-bs-toggle="tooltip" data-bs-placement="right" title="Antrian Hari Ini">
+                        <i class="fas fa-clock"></i>
+                    </a>
+                    @endif
+
+                    {{-- Customer --}}
+                    <a href="{{ route('customers.index') }}" 
+                       class="sidebar-link {{ Route::is('customers.index') || Route::is('customers.bookings') ? 'active' : '' }}" 
+                       data-bs-toggle="tooltip" data-bs-placement="right" title="Data Customer">
+                        <i class="fas fa-users"></i>
+                    </a>
+
+                    {{-- Advisor (Jika ada) --}}
+                    @if(Route::has('advisor.index'))
+                    <a href="{{ route('advisor.index') }}" 
+                       class="sidebar-link {{ Route::is('advisor.index') ? 'active' : '' }}" 
+                       data-bs-toggle="tooltip" data-bs-placement="right" title="Data Advisor">
+                        <i class="fas fa-user-tie"></i>
+                    </a>
+                    @endif
+
+                </div>
+
+                {{-- Spacer untuk mendorong logout ke bawah (opsional, tapi logout sudah di header) --}}
+                <div class="mt-auto mb-3">
+                    {{-- Ikon info/bantuan opsional di bawah --}}
+                    <a href="#" class="sidebar-link" data-bs-toggle="tooltip" data-bs-placement="right" title="Bantuan">
+                        <i class="far fa-question-circle"></i>
+                    </a>
+                </div>
+            </aside>
+
+            {{-- ================= KONTEN UTAMA ================= --}}
+            <main class="admin-main">
+                @yield('content')
+            </main>
+
+
+        {{-- ================= LAYOUT CUSTOMER (TIDAK BERUBAH) ================= --}}
+        @elseif(Auth::user()->role === 'customer')
+             <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm fixed-top" style="height: 70px;">
+                <div class="container">
+                    <a class="navbar-brand fw-bold" href="{{ route('customers.dashboard') }}">
+                        <i class="fas fa-motorcycle me-2 text-danger"></i> Bengkel Servis
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#customerNav">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse" id="customerNavbarNav">
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item">
-                                <a class="nav-link {{ Route::is('customers.dashboard') ? 'active fw-bold' : '' }}" href="{{ route('customers.dashboard') }}">
-                                    <i class="fas fa-tachometer-alt me-1"></i> Dashboard
-                                </a>
-                            </li>
+                    <div class="collapse navbar-collapse" id="customerNav">
+                        <ul class="navbar-nav ms-auto align-items-center">
+                            <li class="nav-item"><a class="nav-link text-white" href="{{ route('customers.dashboard') }}">Dashboard</a></li>
                             @if(Route::has('booking.create'))
-                            <li class="nav-item">
-                                <a class="nav-link {{ Route::is('booking.create') ? 'active fw-bold' : '' }}" href="{{ route('booking.create') }}">
-                                    <i class="fas fa-calendar-plus me-1"></i> Buat Booking
-                                </a>
-                            </li>
+                            <li class="nav-item"><a class="nav-link text-white" href="{{ route('booking.create') }}">Buat Booking</a></li>
                             @endif
-                            @if(Route::has('profile'))
-                            <li class="nav-item">
-                                <a class="nav-link {{ Route::is('profile') ? 'active fw-bold' : '' }}" href="{{ route('profile') }}">
-                                    <i class="fas fa-user-edit me-1"></i> Edit Profil
-                                </a>
-                            </li>
-                            @endif
-                        </ul>
-                         <ul class="navbar-nav ms-2">
-                            <li class="nav-item">
-                                 <form id="logout-form-customer" action="{{ route('logout') }}" method="POST" class="d-inline">
+                            <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+                                <form action="{{ route('logout') }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="btn btn-outline-danger btn-sm d-flex align-items-center">
-                                         <i class="fas fa-sign-out-alt me-1"></i> Keluar
-                                    </button>
+                                    <button class="btn btn-danger rounded-pill px-4 btn-sm">Keluar</button>
                                 </form>
                             </li>
                         </ul>
                     </div>
                 </div>
             </nav>
-            {{-- Konten Customer (Langsung di bawah navbar) --}}
-            <main class="container py-4"> {{-- Customer pakai container biasa --}}
+            <main class="container py-5" style="margin-top: 80px;">
                 @yield('content')
             </main>
         @endif
     @else
-        {{-- Jika tidak login (Tamu) --}}
-        <main> {{-- Tanpa navbar, tanpa padding atas --}}
+        {{-- LAYOUT TAMU --}}
+        <main>
              @yield('content')
         </main>
     @endif
 
-
-    {{-- Bootstrap JS --}}
+    {{-- Script Bootstrap --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    {{-- Script untuk mengaktifkan Tooltip Bootstrap --}}
     <script>
-        // Inisialisasi semua tooltip
+        // 1. Script Toggle Sidebar untuk Mobile
+        function toggleSidebar() {
+            document.getElementById('adminSidebar').classList.toggle('show');
+        }
+
+        // 2. Script Tooltip Bootstrap (Wajib untuk Sidebar Icon-Only)
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
           return new bootstrap.Tooltip(tooltipTriggerEl)
         })
     </script>
-
-    @yield('scripts') {{-- Tempat untuk script tambahan per halaman --}}
-
+    
+    @yield('scripts')
 </body>
 </html>

@@ -4,33 +4,53 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-7 col-lg-6">
-            <div class="card shadow-sm border-success rounded-4 text-center">
-                <div class="card-header bg-success text-white py-3">
+            <div class="card shadow-lg border-success rounded-4 text-center overflow-hidden">
+                <div class="card-header bg-success text-white py-4">
                     <h3 class="fw-bold mb-0"><i class="fas fa-check-circle me-2"></i>Booking Berhasil!</h3>
                 </div>
                 <div class="card-body p-4 p-md-5">
 
-                    <h5 class="mb-3">Nomor Antrian Anda:</h5>
+                    <h6 class="text-uppercase text-muted fw-bold mb-2">Nomor Antrian Anda</h6>
                     {{-- Tampilkan Nomor Antrian Besar --}}
-                    <h1 class="display-1 fw-bolder text-danger mb-4">{{ $booking->queue_number }}</h1>
+                    <div class="display-1 fw-bolder text-danger mb-4">
+                        {{ $booking->queue_number }}
+                    </div>
 
                     {{-- Detail Booking --}}
-                    <div class="card bg-light border-0 rounded-3 mb-4 text-start">
-                        <div class="card-body small">
-                            <p class="mb-2"><strong><i class="fas fa-wrench me-2 text-muted"></i>Jenis Service:</strong> {{ $booking->service->name }}</p>
+                    <div class="card bg-light border-0 rounded-3 mb-4 text-start shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-wrench me-3 text-danger fs-5"></i>
+                                <div>
+                                    <small class="text-muted d-block">Jenis Service</small>
+                                    <strong>{{ $booking->service->name }}</strong>
+                                </div>
+                            </div>
+                            <hr class="my-2 text-muted opacity-25">
                             @php
                                 $bookingTime = \Carbon\Carbon::parse($booking->booking_date);
-                                // Hitung estimasi selesai (misal 75 menit dari waktu booking)
                                 $endTime = $bookingTime->copy()->addMinutes(75)->format('H:i');
                             @endphp
-                            <p class="mb-2"><strong><i class="fas fa-clock me-2 text-muted"></i>Waktu Booking:</strong> {{ $bookingTime->format('d M Y, H:i') }} WIB</p>
-                            <p class="mb-0"><strong><i class="fas fa-hourglass-half me-2 text-muted"></i>Estimasi Layanan:</strong> {{ $bookingTime->format('H:i') }} - {{ $endTime }} WIB</p>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-clock me-3 text-danger fs-5"></i>
+                                <div>
+                                    <small class="text-muted d-block">Waktu Booking</small>
+                                    <strong>{{ $bookingTime->format('d M Y, H:i') }} WIB</strong>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-hourglass-half me-3 text-danger fs-5"></i>
+                                <div>
+                                    <small class="text-muted d-block">Estimasi Layanan</small>
+                                    <strong>{{ $bookingTime->format('H:i') }} - {{ $endTime }} WIB</strong>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    {{-- Status Booking --}}
-                    <p class="mb-4">
-                        <span class="text-muted me-2">Status:</span>
+                    {{-- Status --}}
+                    <div class="mb-4">
+                        <span class="text-muted me-2">Status Saat Ini:</span>
                         @php
                             $statusClass = [
                                 'pending'     => 'bg-warning text-dark',
@@ -40,22 +60,26 @@
                                 'cancelled'   => 'bg-danger',
                             ][strtolower($booking->status)] ?? 'bg-secondary';
                         @endphp
-                        <span class="badge rounded-pill fs-6 {{ $statusClass }}">
+                        <span class="badge rounded-pill {{ $statusClass }} px-3">
                             {{ str_replace('_', ' ', ucfirst($booking->status)) }}
                         </span>
-                    </p>
+                    </div>
 
-                    <p class="text-muted small mb-4">
-                        Silakan datang ~15 menit sebelum waktu estimasi layanan.<br>
-                        Notifikasi WhatsApp akan dikirimkan saat giliran Anda mendekat.
-                    </p>
+                    <div class="alert alert-warning d-flex align-items-center small text-start" role="alert">
+                        <i class="fas fa-info-circle flex-shrink-0 me-2 fs-5"></i>
+                        <div>
+                            Silakan datang <strong>~15 menit sebelum</strong> waktu layanan. Notifikasi WhatsApp akan dikirimkan saat giliran Anda mendekat.
+                        </div>
+                    </div>
 
                     {{-- Tombol Aksi --}}
-                    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                        {{-- <a href="{{ route('booking.queue') }}" class="btn btn-outline-danger">Lihat Daftar Antrian</a> --}}
-                        <a href="{{ route('booking.queue') }}" class="btn btn-primary">Lihat Daftar Antrian</a>
-                        <a href="{{ route('admin.dashboard') }}" class="btn btn-danger">Kembali ke Dashboard</a>
-                        {{-- Mengarahkan ke dashboard customer --}}
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="{{ route('booking.queue') }}" class="btn btn-primary btn-lg shadow-sm">
+                            <i class="fas fa-list-ol me-2"></i>Lihat Daftar Antrian
+                        </a>
+                        <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-danger shadow-sm">
+                            <i class="fas fa-home me-2"></i>Kembali ke Dashboard
+                        </a>
                     </div>
                 </div>
             </div>
@@ -64,6 +88,5 @@
 </div>
 
 {{-- Memastikan Font Awesome dan JS Bootstrap dimuat --}}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLMDJzLlQ36k2UaYJtU378F7xXvP+sN4fFw/U6/A2uB4aU+M+F1U+A9P7y+W+W+Z+Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 @endsection

@@ -1,96 +1,94 @@
 @extends('layouts.app')
 
 @section('content')
-{{-- Tidak memerlukan Font Awesome lagi karena sudah ada di layout utama --}}
-{{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLMDJzLlQ36k2UaYJtU378F7xXvP+sN4fFw/U6/A2uB4aU+M+F1U+A9P7y+W+W+Z+Q==" crossorigin="anonymous" referrerpolicy="no-referrer" /> --}}
-
 <div class="container py-4">
 
-    <h1 class="mb-4 fw-bold border-bottom border-danger pb-2 text-danger">
-        <i class="fas fa-users me-2"></i>Daftar Customer
-    </h1>
+    {{-- Header Halaman --}}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark mb-0">
+            <i class="fas fa-users me-2 text-danger"></i>Daftar Customer
+        </h2>
+        {{-- Jika ada tombol tambah customer, bisa diletakkan di sini --}}
+    </div>
 
     @if ($customers->isEmpty())
-        <div class="card shadow-sm border-light">
+        <div class="card shadow-sm border-0 rounded-4">
             <div class="card-body text-center p-5">
-                <i class="fas fa-info-circle fa-3x text-muted mb-3"></i>
-                <p class="mb-0 text-muted">Belum ada customer yang terdaftar.</p>
+                <div class="bg-light rounded-circle d-inline-flex p-4 mb-3">
+                    <i class="fas fa-users-slash fa-3x text-secondary opacity-50"></i>
+                </div>
+                <h5 class="fw-bold text-dark">Belum ada customer</h5>
+                <p class="mb-0 text-muted">Belum ada data customer yang terdaftar di sistem.</p>
             </div>
         </div>
     @else
-        <div class="card shadow-lg border-danger-subtle rounded-4">
-            {{-- Menghapus p-0 agar ada padding di dalam card body --}}
-            <div class="card-body">
-                <div class="table-responsive">
-                    {{-- Menambahkan table-striped dan table-hover untuk visual yang lebih baik --}}
-                    <table class="table table-hover table-striped mb-0 align-middle">
-                        <thead class="table-danger">
+        <div class="card shadow border-0 rounded-4 overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light border-bottom">
+                        <tr>
+                            <th scope="col" class="py-3 px-4 text-center text-secondary small text-uppercase fw-bold" style="width: 5%;">#</th>
+                            <th scope="col" class="py-3 px-4 text-secondary small text-uppercase fw-bold">Nama Customer</th>
+                            <th scope="col" class="py-3 px-4 text-secondary small text-uppercase fw-bold">Email</th>
+                            <th scope="col" class="py-3 px-4 text-secondary small text-uppercase fw-bold">No. WhatsApp</th>
+                            <th scope="col" class="py-3 px-4 text-center text-secondary small text-uppercase fw-bold">Total Booking</th>
+                            <th scope="col" class="py-3 px-4 text-center text-secondary small text-uppercase fw-bold" style="width: 15%;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($customers as $index => $customer)
                             <tr>
-                                <th scope="col" class="py-3 px-4">#</th>
-                                <th scope="col" class="py-3 px-4">Nama Customer</th>
-                                <th scope="col" class="py-3 px-4">Email</th>
-                                <th scope="col" class="py-3 px-4">No. WhatsApp</th>
-                                <th scope="col" class="py-3 px-4 text-center">Total Booking</th>
-                                <th scope="col" class="py-3 px-4 text-center">Aksi</th>
+                                <td class="px-4 text-center text-muted fw-bold">{{ $customers->firstItem() + $index }}</td>
+                                <td class="px-4">
+                                    <span class="fw-bold text-dark">{{ $customer->name }}</span>
+                                </td>
+                                <td class="px-4 text-secondary">{{ $customer->email }}</td>
+                                <td class="px-4">
+                                    @if ($customer->bookings->isNotEmpty())
+                                        @php
+                                            $whatsappNumber = $customer->bookings->first()->customer_whatsapp;
+                                        @endphp
+                                        <span class="font-monospace text-dark">
+                                            <i class="fab fa-whatsapp text-success me-1"></i>{{ $whatsappNumber }}
+                                        </span>
+                                    @else
+                                        <span class="text-muted small fst-italic">Belum ada data</span>
+                                    @endif
+                                </td>
+                                <td class="px-4 text-center">
+                                    <span class="badge bg-danger-subtle text-danger rounded-pill px-3 py-2 border border-danger-subtle">
+                                        {{ $customer->bookings->count() }} Booking
+                                    </span>
+                                </td>
+                                <td class="px-4 text-center">
+                                    @if ($customer->bookings->isNotEmpty())
+                                        <a href="{{ route('customers.bookings', ['email' => $customer->email, 'whatsapp' => $whatsappNumber ?? 'N/A']) }}" 
+                                           class="btn btn-sm btn-light text-danger rounded-pill px-3 border shadow-sm fw-bold">
+                                            <i class="fas fa-history me-1"></i>Riwayat
+                                        </a>
+                                    @else
+                                        <button class="btn btn-sm btn-light text-muted border rounded-pill px-3" disabled>
+                                            <i class="fas fa-ban me-1"></i>Kosong
+                                        </button>
+                                    @endif
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($customers as $index => $customer)
-                                <tr>
-                                    <td class="px-4 fw-bold">{{ $loop->iteration }}</td>
-                                    <td class="px-4">{{ $customer->name }}</td>
-                                    <td class="px-4">{{ $customer->email }}</td>
-                                    <td class="px-4">
-                                        @if ($customer->bookings->isNotEmpty())
-                                            @php
-                                                // Logika PHP asli tidak diubah
-                                                $whatsappNumber = $customer->bookings->first()->customer_whatsapp;
-                                            @endphp
-                                            {{ $whatsappNumber }}
-                                        @else
-                                            <span class="text-muted fst-italic">Belum ada booking</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-4 text-center">
-                                        {{-- Menggunakan badge Bootstrap standar --}}
-                                        <span class="badge rounded-pill bg-danger">{{ $customer->bookings->count() }}</span>
-                                    </td>
-                                    <td class="px-4 text-center">
-                                        @if ($customer->bookings->isNotEmpty())
-                                            {{-- Menggunakan tombol outline merah --}}
-                                            <a href="{{ route('customers.bookings', ['email' => $customer->email, 'whatsapp' => $whatsappNumber ?? 'N/A']) }}" class="btn btn-sm btn-outline-danger fw-bold">
-                                                <i class="fas fa-history me-1"></i> Lihat Booking
-                                            </a>
-                                        @else
-                                            <button class="btn btn-sm btn-outline-secondary" disabled>
-                                                <i class="fas fa-times-circle me-1"></i> Tidak ada Booking
-                                            </button>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-             {{-- Menampilkan Paginasi di dalam Card Footer --}}
-             @php
-             // Pastikan variabel $customers adalah instance Paginator
-             if ($customers instanceof \Illuminate\Pagination\LengthAwarePaginator) {
-             @endphp
-                 @if ($customers->hasPages())
-                 <div class="card-footer bg-light border-0">
-                     {{ $customers->links() }}
-                 </div>
-                 @endif
-             @php
-             }
-             @endphp
+            
+            {{-- Footer Paginasi --}}
+            @if($customers instanceof \Illuminate\Pagination\LengthAwarePaginator && $customers->hasPages())
+                <div class="card-footer bg-white border-top-0 py-3">
+                    {{ $customers->links() }}
+                </div>
+            @endif
         </div>
     @endif
 </div>
 
-{{-- Memastikan Bootstrap JS dimuat jika diperlukan (misalnya untuk tooltip atau dropdown di masa depan) --}}
+{{-- Script Bootstrap --}}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 @endsection

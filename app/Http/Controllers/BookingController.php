@@ -237,9 +237,8 @@ class BookingController extends Controller
 
         // Ambil semua booking untuk nomor WhatsApp tertentu
         $bookings = Booking::with(['user', 'service'])
-            ->where('whatsapp_number', $whatsapp)
+            ->where('customer_whatsapp', $whatsapp)
             ->orderBy('booking_date', 'desc')
-            ->orderBy('booking_time', 'desc')
             ->paginate(5);
 
         // Ambil customer name untuk header view

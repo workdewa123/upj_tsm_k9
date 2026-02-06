@@ -1,19 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-{{-- Style kustom untuk tema merah --}}
 <style>
-    .table-danger-light {
-        --bs-table-bg: #f8d7da;
-        --bs-table-striped-bg: #f1c2c5;
-        --bs-table-hover-bg: #eac4c7;
-    }
-    .btn-outline-danger:hover {
-        color: #fff;
-    }
+    /* Styling khusus untuk Pagination agar tetap senada dengan aksen merah */
     .page-item.active .page-link {
         background-color: #dc3545;
         border-color: #dc3545;
+        color: white;
     }
     .page-link {
         color: #dc3545;
@@ -21,51 +14,43 @@
     .page-link:hover {
         color: #a71d2a;
     }
+    /* Hover row tabel yang lebih halus */
+    .table-hover tbody tr:hover {
+        background-color: rgba(220, 53, 69, 0.03); /* Merah sangat tipis saat di-hover */
+    }
 </style>
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="fw-bold text-danger border-bottom border-danger pb-2 mb-0">
-            <i class="fas fa-book-open me-2"></i>Daftar Booking
+        <h1 class="fw-bold text-dark border-bottom pb-2 mb-0">
+            <i class="fas fa-book-open me-2 text-danger"></i>Daftar Booking
         </h1>
-        <a href="{{ route('booking.create') }}" class="btn btn-danger">
+        <a href="{{ route('booking.create') }}" class="btn btn-danger shadow-sm px-4">
             <i class="fas fa-plus me-2"></i>Booking Baru
         </a>
     </div>
 
-    {{-- FORM PENCARIAN --}}
-    {{-- <div class="mb-3">
-        <form action="{{ route('booking.index') }}" method="GET" class="d-flex">
-            <input type="text" name="search_plate" class="form-control me-2" placeholder="Cari berdasarkan Plat Nomor..." value="{{ request('search_plate') }}">
-            <button type="submit" class="btn btn-danger"><i class="fas fa-search"></i> Cari</button>
-            {{-- Tombol Reset (opsional) --}}
-            {{-- @if(request('search_plate'))
-                <a href="{{ route('booking.index') }}" class="btn btn-outline-secondary ms-2">Reset</a>
-            @endif
-        </form>
-    </div>
-    {{-- Akhir Form Pencarian --}}
-
     @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
 
-    <div class="card shadow-lg border-danger-subtle rounded-4">
+    {{-- Card dibuat bersih tanpa border merah --}}
+    <div class="card shadow border-0 rounded-4">
         <div class="card-body p-0">
             <div class="table-responsive">
-                {{-- Menggunakan class table-danger-light untuk tema merah --}}
-                <table class="table table-hover table-striped mb-0">
-                    <thead class="table-danger">
+                <table class="table table-hover align-middle mb-0">
+                    {{-- Header tabel warna netral (abu-abu muda) --}}
+                    <thead class="table-light border-bottom">
                         <tr>
-                            <th scope="col" class="py-3 px-4">Nama</th>
-                            <th scope="col" class="py-3 px-4">Motor</th>
-                            <th scope="col" class="py-3 px-4">Tanggal</th>
-                            <th scope="col" class="py-3 px-4">Estimasi</th>
-                            <th scope="col" class="py-3 px-4 text-center">Status</th>
-                            <th scope="col" class="py-3 px-4 text-center">Aksi</th>
+                            <th scope="col" class="py-3 px-4 text-secondary text-uppercase small fw-bold">Nama</th>
+                            <th scope="col" class="py-3 px-4 text-secondary text-uppercase small fw-bold">Motor</th>
+                            <th scope="col" class="py-3 px-4 text-secondary text-uppercase small fw-bold">Tanggal</th>
+                            <th scope="col" class="py-3 px-4 text-secondary text-uppercase small fw-bold">Estimasi</th>
+                            <th scope="col" class="py-3 px-4 text-secondary text-uppercase small fw-bold text-center">Status</th>
+                            <th scope="col" class="py-3 px-4 text-secondary text-uppercase small fw-bold text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -77,20 +62,23 @@
                             $isOver = now()->greaterThan($endTime);
                         @endphp
                         <tr>
-                            <td class="px-4 align-middle">{{ $booking->customer_name }}</td>
-                            <td class="px-4 align-middle text-uppercase">{{ $booking->vehicle_type }} - {{ $booking->plate_number }}</td>
-                            <td class="px-4 align-middle">{{ $bookingTime->format('d M Y, H:i') }}</td>
-                            <td class="px-4 align-middle">
+                            <td class="px-4 fw-bold text-dark">{{ $booking->customer_name }}</td>
+                            <td class="px-4 text-muted">
+                                <span class="d-block fw-bold text-dark text-uppercase">{{ $booking->plate_number }}</span>
+                                <small>{{ $booking->vehicle_type }}</small>
+                            </td>
+                            <td class="px-4 text-secondary">{{ $bookingTime->format('d M Y, H:i') }}</td>
+                            <td class="px-4 text-secondary">
                                 {{ $startTime->format('H:i') }} - {{ $endTime->format('H:i') }} WIB
                                 @if($isOver && !in_array($booking->status, ['done', 'cancelled']))
-                                    <br><span class="badge bg-danger mt-1">Lewat Estimasi!</span>
+                                    <br><span class="badge bg-danger-subtle text-danger border border-danger-subtle mt-1" style="font-size: 0.7rem;">Lewat Estimasi!</span>
                                 @endif
                             </td>
-                            <td class="px-4 align-middle text-center">
-                                {{-- Form select untuk update status cepat --}}
+                            <td class="px-4 text-center">
                                 <form action="{{ route('booking.updateStatus', $booking->id) }}" method="POST">
                                     @csrf
-                                    <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                    {{-- Select box lebih minimalis --}}
+                                    <select name="status" class="form-select form-select-sm border-0 bg-light fw-bold text-secondary text-center shadow-none" onchange="this.form.submit()" style="cursor: pointer;">
                                         <option value="pending" {{ $booking->status == 'pending' ? 'selected' : '' }}>Pending</option>
                                         <option value="approved" {{ $booking->status == 'approved' ? 'selected' : '' }}>Approved</option>
                                         <option value="on_progress" {{ $booking->status == 'on_progress' ? 'selected' : '' }}>On Progress</option>
@@ -99,26 +87,27 @@
                                     </select>
                                 </form>
                             </td>
-                            <td class="px-4 align-middle text-center">
-                                <a href="{{ route('booking.show', $booking->id) }}" class="btn btn-sm btn-outline-danger">
-                                    <i class="fas fa-search me-1"></i> Detail
+                            <td class="px-4 text-center">
+                                <a href="{{ route('booking.show', $booking->id) }}" class="btn btn-sm btn-light text-danger rounded-pill px-3 shadow-sm">
+                                    Detail <i class="fas fa-arrow-right ms-1"></i>
                                 </a>
                             </td>
                         </tr>
                         @empty
                         <tr>
                             <td colspan="6" class="text-center py-5">
-                                <i class="fas fa-info-circle fa-3x text-muted mb-3"></i>
-                                <p class="text-muted mb-0">Saat ini tidak ada data booking yang tersedia.</p>
+                                <div class="text-muted">
+                                    <i class="fas fa-inbox fa-3x mb-3 opacity-50"></i>
+                                    <p class="mb-0">Belum ada data booking.</p>
+                                </div>
                             </td>
                         </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
-
             @if ($bookings->hasPages())
-            <div class="card-footer bg-light border-0">
+            <div class="card-footer bg-white border-top-0 py-3">
                 {{ $bookings->links() }}
             </div>
             @endif

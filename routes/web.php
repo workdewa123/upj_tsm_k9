@@ -23,6 +23,15 @@ Route::prefix('advisor')->name('advisor.')->group(function () {
     Route::get('/create', [ServiceAdvisorController::class, 'create'])->name('create');
     Route::post('/store', [ServiceAdvisorController::class, 'store'])->name('store');
     Route::get('/{advisor}/print', [ServiceAdvisorController::class, 'print'])->name('print');
+    // Rute Index (List Data)
+    Route::get('/', [ServiceAdvisorController::class, 'index'])->name('index'); 
+
+    Route::get('/create', [ServiceAdvisorController::class, 'create'])->name('create');
+    Route::post('/store', [ServiceAdvisorController::class, 'store'])->name('store');
+    
+    // Rute Edit & Update
+    Route::get('/{id}/edit', [ServiceAdvisorController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [ServiceAdvisorController::class, 'update'])->name('update'); // Pakai PUT
 });
 
 // --- Rute yang Membutuhkan Otentikasi (Auth Middleware) ---
